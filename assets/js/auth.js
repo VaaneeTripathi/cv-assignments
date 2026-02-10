@@ -1,4 +1,3 @@
-
 const ALLOWED_EMAILS = [
     'raghavendra.singh@ashoka.edu.in',
     'saransh.gupta@ashoka.edu.in',
@@ -70,7 +69,7 @@ function getTokenClient() {
     return tokenClient;
 }
 
-// Handle Google OAuth token → Firebase sign-in
+// Handle Google OAuth token -> Firebase sign-in
 function handleGoogleToken(tokenResponse) {
     if (tokenResponse.error) {
         showMessage('Sign-in was cancelled.', 'error');
@@ -82,15 +81,12 @@ function handleGoogleToken(tokenResponse) {
     firebaseAuth.signInWithCredential(credential)
         .then(function(result) {
             if (!isEmailAllowed(result.user.email)) {
-                localStorage.removeItem('signedInEmail');
-                localStorage.removeItem('googleAccessToken');
                 return firebaseAuth.signOut().then(function() {
                     showMessage('This email is not authorized. Please use your university email.', 'error');
                 });
             }
-            // Store for instant restore on next page load
-            localStorage.setItem('signedInEmail', result.user.email);
-            localStorage.setItem('googleAccessToken', tokenResponse.access_token);
+            // ADDED: store token for fast restore on other pages
+            localStorage.setItem('gToken', tokenResponse.access_token);
             // Success — close modal
             if (loginModal) {
                 loginModal.classList.remove('active');
@@ -126,8 +122,7 @@ function showMessage(text, type) {
 // Logout
 if (logoutBtn) {
     logoutBtn.addEventListener('click', function() {
-        localStorage.removeItem('signedInEmail');
-        localStorage.removeItem('googleAccessToken');
+        localStorage.removeItem('gToken');
         firebaseAuth.signOut()
             .then(function() {
                 updateUIForUser(null);
@@ -160,35 +155,20 @@ function updateUIForUser(user) {
     }
 }
 
-// Optimistic UI: show logged-in state instantly from localStorage
-var cachedEmail = localStorage.getItem('signedInEmail');
-if (cachedEmail) {
-    updateUIForUser({ email: cachedEmail });
-}
-
-// Proactive session restore: bypass the slow Firebase auth iframe
-// by signing in directly with stored Google token (~100ms vs ~5min)
-var storedToken = localStorage.getItem('googleAccessToken');
-if (storedToken) {
-    var credential = firebase.auth.GoogleAuthProvider.credential(null, storedToken);
-    firebaseAuth.signInWithCredential(credential).catch(function(err) {
-        // Token expired (~1hr) — clear and let user re-login
-        console.log('Stored token expired:', err.code);
-        localStorage.removeItem('googleAccessToken');
-        localStorage.removeItem('signedInEmail');
-        updateUIForUser(null);
+// ADDED: On page load, proactively restore session from stored Google token.
+// This bypasses the slow Firebase auth iframe (~5min) with a direct API call (~100ms).
+var storedGToken = localStorage.getItem('gToken');
+if (storedGToken) {
+    var cred = firebase.auth.GoogleAuthProvider.credential(null, storedGToken);
+    firebaseAuth.signInWithCredential(cred).catch(function() {
+        localStorage.removeItem('gToken');
     });
 }
 
-// Auth state listener — confirms or corrects the optimistic UI
+// Auth state listener
 firebaseAuth.onAuthStateChanged(function(user) {
     updateUIForUser(user);
-    if (user) {
-        localStorage.setItem('signedInEmail', user.email);
-        if (typeof initializeVoting === 'function') {
-            initializeVoting(user);
-        }
-    } else {
-        localStorage.removeItem('signedInEmail');
+    if (user && typeof initializeVoting === 'function') {
+        initializeVoting(user);
     }
 });
