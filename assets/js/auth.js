@@ -55,26 +55,52 @@ window.addEventListener('click', (e) => {
     }
 });
 
-// Handle redirect result on page load (completes sign-in after Google redirect)
-firebaseAuth.getRedirectResult().then((result) => {
-    if (result && result.user) {
-        if (!isEmailAllowed(result.user.email)) {
-            firebaseAuth.signOut();
-            showMessage('This email is not authorized. Please use your university email.', 'error');
-            if (loginModal) {
-                loginModal.classList.add('active');
-                loginModal.classList.remove('hidden');
-            }
-        }
-    }
-}).catch((error) => {
-    console.error('Error completing sign-in redirect:', error);
-});
+// Restore session from stored Google credential if Firebase persistence failed
+(function tryRestoreSession() {
+    var stored = localStorage.getItem('googleCredential');
+    if (!stored) return;
 
-// Handle Google Sign-In button — redirect instead of popup
+    try {
+        var cred = JSON.parse(stored);
+        var credential = firebase.auth.GoogleAuthProvider.credential(cred.idToken, cred.accessToken);
+        firebaseAuth.signInWithCredential(credential).catch(function(error) {
+            console.log('Stored credential expired, clearing:', error.code);
+            localStorage.removeItem('googleCredential');
+        });
+    } catch (e) {
+        localStorage.removeItem('googleCredential');
+    }
+})();
+
+// Handle Google Sign-In via popup
 if (googleSignInBtn) {
-    googleSignInBtn.addEventListener('click', () => {
-        firebaseAuth.signInWithRedirect(googleProvider);
+    googleSignInBtn.addEventListener('click', async () => {
+        try {
+            const result = await firebaseAuth.signInWithPopup(googleProvider);
+            const email = result.user.email;
+
+            if (!isEmailAllowed(email)) {
+                await firebaseAuth.signOut();
+                localStorage.removeItem('googleCredential');
+                showMessage('This email is not authorized. Please use your university email.', 'error');
+                return;
+            }
+
+            // Store Google credential in localStorage for cross-page persistence
+            if (result.credential) {
+                localStorage.setItem('googleCredential', JSON.stringify({
+                    idToken: result.credential.idToken,
+                    accessToken: result.credential.accessToken
+                }));
+            }
+
+            // Success — close modal
+            loginModal.classList.remove('active');
+            loginModal.classList.add('hidden');
+        } catch (error) {
+            console.error('Error signing in:', error);
+            showMessage(`Error: ${error.code} — ${error.message}`, 'error');
+        }
     });
 }
 
@@ -92,6 +118,7 @@ if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
         try {
             await firebaseAuth.signOut();
+            localStorage.removeItem('googleCredential');
             updateUIForUser(null);
         } catch (error) {
             console.error('Error signing out:', error);
