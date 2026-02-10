@@ -76,41 +76,30 @@ problems:
 
   - number: 3
     title: "Perspective vs Orthographic Projection"
-    description: "Creating images demonstrating perspective and orthographic projection of the same scene."
+    description: "The goal of this exercise is to take images with different settings of a camera to create
+        pictures with perspective projection and with orthographic projection. Both pictures should
+        cover the same piece of the scene. You can take pictures of real places or objects (e.g. your
+        furniture), as long as there are some straight edges in the picture.
+        To create pictures with orthographic projection you can do two things: 1) use the zoom of
+        the camera, 2) crop the central part of a picture. You will have to play with the distance
+        between the camera and the scene, and with the zoom or cropping so that both images look
+        as similar as possible, only differing in the type of projection"
     images:
-      - src: "/assets/images/assignment-1/problem3-perspective.jpg"
+      - src: "/assets/images/assignment-1/projective.png"
         caption: "Perspective projection - note converging parallel lines"
-      - src: "/assets/images/assignment-1/problem3-orthographic.jpg"
+      - src: "/assets/images/assignment-1/orthographic.png"
         caption: "Orthographic projection - parallel lines remain parallel"
     explanation: |
       These two images demonstrate the fundamental difference between perspective and orthographic projection.
       
       **Perspective Projection (First Image):**
-      The first image was taken close to the scene with a normal or wide-angle lens. In this image, you can clearly see parallel lines converging toward vanishing points. For example, the edges of a rectangular table or the sides of a building appear to meet in the distance, even though we know they are parallel in reality. This is characteristic of perspective projection, which models how the human eye and camera lenses see the world.
+        In this image, you can clearly see parallel lines converging toward vanishing points. This is characteristic of perspective projection, which models how the human eye and camera lenses see the world.
       
       In perspective projection, the projection center is at a finite distance (the camera's position), and rays from scene points to the projection center create images on the image plane. Objects farther from the camera appear smaller, and parallel lines in 3D converge to vanishing points in the 2D image.
       
       **Orthographic Projection (Second Image):**
-      The second image was created by either: (1) using heavy zoom from a far distance, or (2) cropping the central portion of a zoomed image. This approximates orthographic projection. In this image, parallel lines in the real world remain parallel in the image - they do not converge. The red lines I've added highlight straight edges in the scene, showing they remain parallel rather than converging.
+      In this image, parallel lines in the real world remain parallel in the image - they do not converge. The red lines I've added highlight straight edges in the scene, showing they remain parallel rather than converging.
       
       In true orthographic projection, the projection center is at infinity, meaning projection rays are parallel rather than converging. This eliminates perspective effects: objects maintain their size regardless of distance from the camera, and parallel lines remain parallel.
       
-      **Technical Implementation:**
-      To approximate orthographic projection with a camera, we use the telephoto effect: by using a very long focal length (high zoom) from a great distance, the angle subtended by the scene becomes very small. This makes the projection rays nearly parallel, approximating orthographic conditions. The cropping method works similarly - by taking only the center portion of a highly zoomed image, we're effectively selecting rays that are nearly parallel.
-      
-      **Practical Differences:**
-      - Perspective projection preserves depth cues and looks natural to human perception
-      - Orthographic projection preserves actual proportions and is useful for technical drawings, architectural plans, and computer-aided design
-      - Perspective shows "what it looks like," orthographic shows "what it is"
 ---
-
-This assignment explores how camera position and zoom settings affect the geometric properties of captured images, specifically examining perspective distortion and the difference between perspective and orthographic projection.
-
-## Overview
-
-Through three exercises, we investigate:
-1. How camera distance affects portrait quality due to perspective distortion
-2. How telephoto compression flattens urban scenes
-3. The fundamental difference between perspective and orthographic projection
-
-These concepts are crucial in computer vision for understanding camera models, 3D reconstruction, and image formation.
