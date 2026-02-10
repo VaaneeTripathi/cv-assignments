@@ -3,12 +3,12 @@ layout: default
 ---
 
 <article class="assignment">
-    <header class="assignment-header">
+    <div class="assignment-header">
         <h1>{{ page.title }}</h1>
         <p class="assignment-meta">
             <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %d, %Y" }}</time>
         </p>
-    </header>
+    </div>
 
     <div class="assignment-content">
         {{ content }}

@@ -35,6 +35,7 @@ body {
 main {
     min-height: calc(100vh - 200px);
     padding: 48px 0;
+    margin-top: 24px;
 }
 
 /* ===== HEADER & NAVIGATION ===== */
@@ -259,6 +260,7 @@ header .btn:hover {
     padding-bottom: 32px;
     border-bottom: 4px solid var(--black);
     margin-bottom: 48px;
+    position: static;
 }
 
 .assignment-header h1 {
@@ -278,7 +280,7 @@ header .btn:hover {
 
 .assignment-meta {
     color: var(--gray);
-    font-size: 0.8rem;
+    font-size: 0.95rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
 }
