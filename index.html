@@ -1,0 +1,45 @@
+---
+layout: default
+title: Home
+---
+
+<div class="hero">
+    <h1>Computer Vision Assignments</h1>
+    <p class="lead">Submitted by {{ site.author }}</p>
+    <p>Welcome to my Computer Vision assignment portfolio. Each assignment includes detailed explanations, images, and interactive voting.</p>
+</div>
+
+<section class="assignments-list">
+    <h2>Assignments</h2>
+    
+    {% if site.assignments.size > 0 %}
+    <div class="assignments-grid">
+        {% for assignment in site.assignments %}
+        <article class="assignment-card">
+            <h3><a href="{{ assignment.url | relative_url }}">{{ assignment.title }}</a></h3>
+            <p class="assignment-date">{{ assignment.date | date: "%B %d, %Y" }}</p>
+            <p class="assignment-excerpt">{{ assignment.excerpt | strip_html | truncatewords: 30 }}</p>
+            <div class="assignment-meta">
+                <span class="problem-count">{{ assignment.problems.size }} problems</span>
+            </div>
+            <a href="{{ assignment.url | relative_url }}" class="btn btn-small">View Assignment →</a>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>No assignments yet. Check back soon!</p>
+    </div>
+    {% endif %}
+</section>
+
+<section class="about">
+    <h2>About This Site</h2>
+    <p>This website showcases my work for the Computer Vision course. Each assignment submission includes:</p>
+    <ul>
+        <li>High-quality photographs demonstrating computer vision concepts</li>
+        <li>Detailed explanations of observations and principles</li>
+        <li>Interactive voting system for peer review</li>
+    </ul>
+    <p>Students can vote on each problem submission to provide feedback. Login is required for voting.</p>
+</section>
