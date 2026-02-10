@@ -67,7 +67,10 @@ loginForm.addEventListener('submit', async (e) => {
     try {
         // Use actionCodeSettings from firebase-config.js (already exported to window)
         // Send sign-in link to email
-        await firebaseAuth.sendSignInLinkToEmail(email, window.actionCodeSettings);
+        await firebaseAuth.sendSignInLinkToEmail(email, {
+            url: 'https://vaaneetripathi.github.io/cv-assignments/auth-complete.html',
+            handleCodeInApp: true
+        });
         
         // Save email for completion of sign-in
         window.localStorage.setItem('emailForSignIn', email);
