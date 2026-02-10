@@ -2,7 +2,7 @@
 
 const firebaseConfig = {
     apiKey: "AIzaSyA_kn2Q3avBQhO7UjcCdvHIjANl-N15yhE",
-    authDomain: "vaaneetripathi.github.io",
+    authDomain: "cv-assignment-32566.firebaseapp.com",
     databaseURL: "https://cv-assignment-32566-default-rtdb.asia-southeast1.firebasedatabase.app",
     projectId: "cv-assignment-32566",
     storageBucket: "cv-assignment-32566.firebasestorage.app",
