@@ -5,42 +5,74 @@ date: 2026-02-03
 slug: assignment-1
 problems:
   - number: 1
-    title: "Portrait Distortion - Close-up vs Zoomed"
-    description: "Comparing facial distortion when photographed close-up versus from a distance with zoom."
+    title: "Image Distortion - Close-up vs Zoomed"
+    description: "Take a picture of your friend from close up. You get a typical distorted image. Now step back several feet from your subject, zoom in, and take a second picture. Try to get the face in the second photo to be the same size as in the first photo. If you've done things right, the second portrait should look much better than the first one. Why?"
     images:
-      - src: "/assets/images/assignment-1/problem1-closeup.jpg"
-        caption: "Close-up portrait showing distortion"
-      - src: "/assets/images/assignment-1/problem1-zoomed.jpg"
-        caption: "Zoomed portrait from distance showing natural proportions"
+      - src: "/assets/images/assignment-1/riya-closeup.jpeg"
+        caption: "Close-up portrait of a dear friend who reluctantly agreed to do this"
+      - src: "/assets/images/assignment-1/riya-zoom.jpeg"
+        caption: "Zoomed portrait"
+      - src: "/assets/images/assignment-1/saroj-didi-closeup.jpeg"
+        caption: "Close-up portrait of Saroj Didi from outside campus"
+      - src: "/assets/images/assignment-1/saroj-didi-zoom.jpeg"
+        caption: "Zoomed potrait"
+      - src: "/assets/images/assignment-1/sign-closeup.jpeg"
+        caption: "Close-up image of a sign"
+      - src: "/assets/images/assignment-1/sign-zoom.jpeg"
+        caption: "Zooming on the same sign"
     explanation: |
-      The second portrait looks much better because of the difference in perspective projection caused by camera distance.
-      
-      When taking a close-up photo (first image), the camera is very close to the subject's face, typically 1-2 feet away. At this distance, different parts of the face are at significantly different distances from the camera lens. The nose, being closest to the camera, appears disproportionately large compared to the ears and sides of the face. This creates the characteristic "distorted" look of close-up portraits where facial features appear exaggerated and unnatural.
-      
-      In the second photo, by stepping back several feet and using optical zoom, we maintain the same field of view (face size in frame) but change the perspective projection. At this greater distance, the relative difference in distance between the nose and ears becomes much smaller as a percentage of the total distance to the camera. This makes the perspective closer to orthographic projection, where parallel lines remain parallel and proportions are preserved more naturally.
-      
-      Mathematically, in perspective projection, the size of an object on the image plane is inversely proportional to its distance from the camera. When very close, small changes in depth create large changes in perceived size. When farther away, these depth differences become negligible relative to the camera distance, resulting in more natural proportions.
-      
-      This is why professional portrait photographers typically use telephoto lenses (85mm-135mm) and shoot from a distance - it produces flattering, natural-looking portraits by reducing perspective distortion.
+        If we look closely, one can see that in all of these cases, the resolution of the closeup image is much better than the zoomed image. This, at first, seemed to be opposite of what should happen according to the question. I then looked at two things:
+        1. Why does the question say zoom should be better and in what way?
+        2. Why does my camera not achieve that?
+
+        **Why does the question say zoom should be better and in what way?**
+
+        The question is referring to the improvement in perspective distortion, not necessarily image resolution or sharpness. When photographing a face from very close range, different facial features are at vastly different distances from the camera. For instance, if the nose is 30cm away, the ears might be 45cm away—a 50% difference in distance. Due to perspective projection, objects closer to the camera appear disproportionately larger. This creates the characteristic "fisheye" effect where noses appear bulbous, foreheads look enlarged, and ears seem smaller than they should be.
+
+        When you step back to, say, 3 meters and zoom in to maintain the same face size in the frame, the nose might be 3.0m away while the ears are 3.15m away—only a 5% difference. All facial features are now at much more similar relative distances from the camera, so the perspective distortion is greatly reduced. The face appears flatter, more natural, and more closely matches how we perceive faces in person. 
+
+        **Why does my camera not achieve that?**
+
+        The Xiaomi 11T Pro (my camera), like most smartphones, has multiple camera modules with different focal lengths. The main camera uses a wide-angle lens (approximately 26mm equivalent), which is excellent for close-up shots and has the best sensor, optics, and computational photography capabilities. When you zoom in on a smartphone, one of two things happens:
+
+        1. **Digital zoom**: The phone crops into the main camera's image and upscales it. This reduces effective resolution significantly and introduces artifacts from interpolation.
+
+        2. **Lens switching**: The phone switches to a secondary telephoto camera (if available), which typically has an inferior sensor, smaller aperture, and less sophisticated processing compared to the main camera.
+
+        In both cases, the image quality degradation—loss of resolution, detail, dynamic range, and low-light performance—outweighs the geometric improvement from better perspective. The main camera is optimized to be the flagship sensor, so despite the worse perspective distortion at close range, it produces sharper, cleaner images overall.
+
+        Therefore, while the theoretical principle about perspective distortion is correct and applies to traditional cameras with a single, high-quality lens that can zoom optically, modern smartphones prioritize image quality from their best sensor over geometric accuracy.
+
 
   - number: 2
-    title: "Urban Scene Compression - Zoomed vs Walk-up"
-    description: "Comparing a zoomed street view versus walking closer without zoom."
+    title: "Scenery - Zoom vs Closeup"
+    description: " Let's repeat the same procedure in reverse, for an urban scene. Pick a nice view down a long street (or a walking path on campus), zoom in, and take a photo. Now, walk down the street in the direction of your first shot, and take a second photo without zoom, such that the scene in the two photos appears approximately the same size. The first picture should look flattened, or compressed, compared to the second. Why?"
     images:
-      - src: "/assets/images/assignment-1/problem2-zoomed.jpg"
-        caption: "Zoomed-in view of street showing compressed perspective"
-      - src: "/assets/images/assignment-1/problem2-walkup.jpg"
-        caption: "Walk-up view showing expanded depth"
+      - src: "/assets/images/assignment-1/scene-zoom.jpeg"
+        caption: "Zoomed-in view of TSB"
+      - src: "/assets/images/assignment-1/scene-closeup.jpeg"
+        caption: "Closeup view of TSB"
     explanation: |
-      The first zoomed picture appears flattened or compressed because of the telephoto compression effect, while the second walk-up photo shows more depth and separation between objects.
-      
-      When using zoom from a distance (first image), we're using a longer focal length to capture the scene. This creates a narrow field of view where objects at different depths appear much closer together than they actually are. Buildings, cars, and people along the street seem stacked on top of each other with minimal separation. This "telephoto compression" makes the scene look two-dimensional and flattened.
-      
-      In the second photo, by walking closer and using a wider angle (no zoom), we capture a wider field of view with strong perspective cues. Objects closer to the camera appear much larger than those farther away, creating a pronounced depth gradient. The street appears to recede dramatically into the distance, with clear separation between foreground, middle ground, and background elements.
-      
-      This difference occurs because perspective projection depends on the viewing angle and distance. With telephoto (zoomed), the narrow viewing angle means rays from the camera to objects are nearly parallel - similar to orthographic projection. Objects at different depths subtend nearly the same angle, so they appear similar in size. With wide angle (close-up), the large viewing angle creates strongly converging rays, emphasizing perspective and depth.
-      
-      This effect is commonly used in filmmaking: telephoto lenses compress space and flatten scenes (useful for making crowds look denser or cities look more congested), while wide angles exaggerate space and create drama (useful for making rooms look larger or emphasizing distance).
+
+        Looking at the two images provided, the first image is the zoomed-in shot taken from farther away. The second image has been taken from closer to the scene without zoom. This follows the expected behavior described in the question.
+
+        **Why does the zoomed-in image look flattened or compressed compared to the close-up image?**
+
+        This phenomenon is the inverse of what we observed in Question 1, and it demonstrates the same fundamental principle of perspective projection working in the opposite direction.
+
+        When you zoom in from a distant position, objects at different depths in the scene are all at relatively similar distances from the camera. For instance, if the nearest architectural element is 50 meters away and the farthest visible element is 60 meters away, that's only a 20% difference in distance. According to perspective projection, the size ratio between these objects is determined by the ratio of their distances from the camera. Since 50m and 60m are relatively close in ratio (60/50 = 1.2), the depth in the scene appears compressed—objects at different depths appear more similar in size than they actually are.
+
+        This creates the characteristic "telephoto compression" effect where:
+        - Foreground and background elements appear closer together than they are in reality
+        - The spatial separation between layers of depth is minimized
+        - The scene looks "flattened" as if everything exists on nearly the same plane
+        - Background objects appear larger relative to foreground objects
+
+        When you walk closer to the scene and take the second photo without zoom, the nearest elements might now be 10 meters away while the farthest elements are still around 60 meters away—a 500% difference in distance (60/10 = 6). This dramatic difference in the distance ratios causes:
+        - Foreground objects to appear much larger relative to background objects
+        - Greater perceived depth and spatial separation between elements
+        - A more three-dimensional, "stretched out" appearance
+        - The scene feeling more immersive and having stronger depth cues.
 
   - number: 3
     title: "Perspective vs Orthographic Projection"
