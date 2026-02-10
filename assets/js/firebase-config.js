@@ -24,7 +24,7 @@ auth.useDeviceLanguage();
 
 // Configure auth for email link sign-in
 const actionCodeSettings = {
-    url: window.location.origin + '/cv-assignments/auth-complete.html',
+    url: 'https://vaaneetripathi.github.io/cv-assignments/auth-complete.html',  
     handleCodeInApp: true
 };
 
