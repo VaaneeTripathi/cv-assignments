@@ -137,6 +137,7 @@ header .btn:hover {
     margin-bottom: 48px;
     position: relative;
     border-left: 6px solid var(--yellow);
+    margin-top: 8px;
 }
 
 .hero h1 {
