@@ -22,13 +22,10 @@ const database = firebase.database();
 // Configure auth settings
 auth.useDeviceLanguage();
 
-// Configure auth for email link sign-in
-const actionCodeSettings = {
-    url: 'https://vaaneetripathi.github.io/cv-assignments/auth-complete.html',  
-    handleCodeInApp: true
-};
+// Google Auth Provider
+const googleProvider = new firebase.auth.GoogleAuthProvider();
 
 // Export for use in other scripts
 window.firebaseAuth = auth;
 window.firebaseDatabase = database;
-window.actionCodeSettings = actionCodeSettings;
+window.googleProvider = googleProvider;
