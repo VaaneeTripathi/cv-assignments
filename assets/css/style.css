@@ -616,18 +616,20 @@ footer {
     margin-bottom: 14px;
     line-height: 1.8;
     font-size: 0.95rem;
-    color:#1a1a1a;
+    color: var(--black);
 }
 
 .about ul {
     margin-left: 24px;
     margin-bottom: 14px;
+    color: var(--black);
 }
 
 .about li {
     margin-bottom: 8px;
     line-height: 1.6;
     font-size: 0.95rem;
+    color: var(--black);
 }
 
 /* ===== UTILITY CLASSES ===== */
