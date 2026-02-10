@@ -596,7 +596,7 @@ footer {
 
 /* ===== ABOUT SECTION ===== */
 .about {
-    background-color: var(--white);
+    background-color: var(--black);
     padding: 40px;
     border-radius: 0;
     border: 3px solid var(--black);
