@@ -1,0 +1,67 @@
+---
+layout: default
+---
+
+<article class="assignment">
+    <header class="assignment-header">
+        <h1>{{ page.title }}</h1>
+        <p class="assignment-meta">
+            <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %d, %Y" }}</time>
+        </p>
+    </header>
+
+    <div class="assignment-content">
+        {{ content }}
+    </div>
+
+    <div class="problems-container">
+        {% for problem in page.problems %}
+        <section class="problem" id="problem-{{ problem.number }}">
+            <div class="problem-header">
+                <h2>Problem {{ problem.number }}: {{ problem.title }}</h2>
+                <div class="voting-widget" data-problem-id="{{ page.slug }}-problem-{{ problem.number }}">
+                    <button class="vote-btn upvote" data-vote="up" title="Upvote">
+                        <span class="vote-icon">▲</span>
+                    </button>
+                    <span class="vote-count">0</span>
+                    <button class="vote-btn downvote" data-vote="down" title="Downvote">
+                        <span class="vote-icon">▼</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="problem-content">
+                <div class="problem-description">
+                    <h3>Description</h3>
+                    <p>{{ problem.description }}</p>
+                </div>
+
+                {% if problem.images %}
+                <div class="problem-images">
+                    <h3>Images</h3>
+                    <div class="image-grid">
+                        {% for image in problem.images %}
+                        <figure class="problem-image">
+                            <img src="{{ image.src | relative_url }}" alt="{{ image.caption }}">
+                            <figcaption>{{ image.caption }}</figcaption>
+                        </figure>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if problem.explanation %}
+                <div class="problem-explanation">
+                    <h3>Explanation</h3>
+                    <div class="explanation-text">{{ problem.explanation | markdownify }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+        {% endfor %}
+    </div>
+
+    <nav class="assignment-nav">
+        <a href="{{ '/' | relative_url }}" class="btn">← Back to All Assignments</a>
+    </nav>
+</article>
