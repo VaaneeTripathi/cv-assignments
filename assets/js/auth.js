@@ -85,7 +85,7 @@ function handleGoogleToken(tokenResponse) {
                     showMessage('This email is not authorized. Please use your university email.', 'error');
                 });
             }
-            // ADDED: store token for fast restore on other pages
+            // Store token for fast restore on other pages
             localStorage.setItem('gToken', tokenResponse.access_token);
             // Success — close modal
             if (loginModal) {
@@ -155,7 +155,7 @@ function updateUIForUser(user) {
     }
 }
 
-// ADDED: On page load, proactively restore session from stored Google token.
+// On page load, proactively restore session from stored Google token.
 // This bypasses the slow Firebase auth iframe (~5min) with a direct API call (~100ms).
 var storedGToken = localStorage.getItem('gToken');
 if (storedGToken) {
