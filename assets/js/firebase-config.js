@@ -9,8 +9,10 @@ const firebaseConfig = {
     messagingSenderId: "274746989601",
     appId: "1:274746989601:web:a7562c27f3e0e94fe89760",
     measurementId: "G-Y7NVCRGB3D"
-
 };
+
+// Google OAuth Client ID (from Firebase project)
+const GOOGLE_CLIENT_ID = '274746989601-deh77sm2h8bmftlbipk2uvdn4j6icnu4.apps.googleusercontent.com';
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
@@ -23,10 +25,7 @@ const database = firebase.database();
 auth.useDeviceLanguage();
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(console.error);
 
-// Google Auth Provider
-const googleProvider = new firebase.auth.GoogleAuthProvider();
-
 // Export for use in other scripts
 window.firebaseAuth = auth;
 window.firebaseDatabase = database;
-window.googleProvider = googleProvider;
+window.GOOGLE_CLIENT_ID = GOOGLE_CLIENT_ID;

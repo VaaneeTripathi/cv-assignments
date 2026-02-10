@@ -17,116 +17,121 @@ const ALLOWED_EMAILS = [
     'vaanee.tripathi_ug25@ashoka.edu.in'
 ];
 
-// Check if email is in allowed list
 function isEmailAllowed(email) {
-    const normalizedEmail = email.toLowerCase().trim();
-    return ALLOWED_EMAILS.some(allowed => allowed.toLowerCase() === normalizedEmail);
+    return ALLOWED_EMAILS.some(function(allowed) {
+        return allowed.toLowerCase() === email.toLowerCase().trim();
+    });
 }
 
 // UI Elements
-const loginBtn = document.getElementById('login-btn');
-const logoutBtn = document.getElementById('logout-btn');
-const loginModal = document.getElementById('login-modal');
-const closeModal = document.querySelector('.close');
-const googleSignInBtn = document.getElementById('google-signin-btn');
-const loginMessage = document.getElementById('login-message');
-const userEmailDisplay = document.getElementById('user-email');
+var loginBtn = document.getElementById('login-btn');
+var logoutBtn = document.getElementById('logout-btn');
+var loginModal = document.getElementById('login-modal');
+var closeModal = document.querySelector('.close');
+var googleSignInBtn = document.getElementById('google-signin-btn');
+var loginMessage = document.getElementById('login-message');
+var userEmailDisplay = document.getElementById('user-email');
 
-// Show/hide login modal
+// Modal handlers
 if (loginBtn) {
-    loginBtn.addEventListener('click', () => {
+    loginBtn.addEventListener('click', function() {
         loginModal.classList.add('active');
         loginModal.classList.remove('hidden');
     });
 }
 
 if (closeModal) {
-    closeModal.addEventListener('click', () => {
+    closeModal.addEventListener('click', function() {
         loginModal.classList.remove('active');
         loginModal.classList.add('hidden');
         if (loginMessage) loginMessage.classList.add('hidden');
     });
 }
 
-window.addEventListener('click', (e) => {
+window.addEventListener('click', function(e) {
     if (e.target === loginModal) {
         loginModal.classList.remove('active');
         loginModal.classList.add('hidden');
     }
 });
 
-// Restore session from stored Google credential if Firebase persistence failed
-(function tryRestoreSession() {
-    var stored = localStorage.getItem('googleCredential');
-    if (!stored) return;
+// Google Identity Services token client (lazy init)
+var tokenClient = null;
 
-    try {
-        var cred = JSON.parse(stored);
-        var credential = firebase.auth.GoogleAuthProvider.credential(cred.idToken, cred.accessToken);
-        firebaseAuth.signInWithCredential(credential).catch(function(error) {
-            console.log('Stored credential expired, clearing:', error.code);
-            localStorage.removeItem('googleCredential');
-        });
-    } catch (e) {
-        localStorage.removeItem('googleCredential');
+function getTokenClient() {
+    if (tokenClient) return tokenClient;
+    if (typeof google === 'undefined' || !google.accounts || !google.accounts.oauth2) return null;
+
+    tokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: GOOGLE_CLIENT_ID,
+        scope: 'email profile',
+        callback: handleGoogleToken
+    });
+    return tokenClient;
+}
+
+// Handle Google OAuth token → Firebase sign-in
+function handleGoogleToken(tokenResponse) {
+    if (tokenResponse.error) {
+        showMessage('Sign-in was cancelled.', 'error');
+        return;
     }
-})();
 
-// Handle Google Sign-In via popup
-if (googleSignInBtn) {
-    googleSignInBtn.addEventListener('click', async () => {
-        try {
-            const result = await firebaseAuth.signInWithPopup(googleProvider);
-            const email = result.user.email;
+    var credential = firebase.auth.GoogleAuthProvider.credential(null, tokenResponse.access_token);
 
-            if (!isEmailAllowed(email)) {
-                await firebaseAuth.signOut();
-                localStorage.removeItem('googleCredential');
-                showMessage('This email is not authorized. Please use your university email.', 'error');
-                return;
+    firebaseAuth.signInWithCredential(credential)
+        .then(function(result) {
+            if (!isEmailAllowed(result.user.email)) {
+                return firebaseAuth.signOut().then(function() {
+                    showMessage('This email is not authorized. Please use your university email.', 'error');
+                });
             }
-
-            // Store Google credential in localStorage for cross-page persistence
-            if (result.credential) {
-                localStorage.setItem('googleCredential', JSON.stringify({
-                    idToken: result.credential.idToken,
-                    accessToken: result.credential.accessToken
-                }));
-            }
-
             // Success — close modal
-            loginModal.classList.remove('active');
-            loginModal.classList.add('hidden');
-        } catch (error) {
-            console.error('Error signing in:', error);
-            showMessage(`Error: ${error.code} — ${error.message}`, 'error');
+            if (loginModal) {
+                loginModal.classList.remove('active');
+                loginModal.classList.add('hidden');
+            }
+        })
+        .catch(function(error) {
+            console.error('Firebase sign-in error:', error);
+            showMessage('Error signing in: ' + error.message, 'error');
+        });
+}
+
+// Sign-in button click
+if (googleSignInBtn) {
+    googleSignInBtn.addEventListener('click', function() {
+        var client = getTokenClient();
+        if (client) {
+            client.requestAccessToken();
+        } else {
+            showMessage('Google Sign-In is still loading. Please try again in a moment.', 'error');
         }
     });
 }
 
-// Show message in modal
 function showMessage(text, type) {
     if (loginMessage) {
         loginMessage.textContent = text;
-        loginMessage.className = `message ${type}`;
+        loginMessage.className = 'message ' + type;
         loginMessage.classList.remove('hidden');
     }
 }
 
-// Handle logout
+// Logout
 if (logoutBtn) {
-    logoutBtn.addEventListener('click', async () => {
-        try {
-            await firebaseAuth.signOut();
-            localStorage.removeItem('googleCredential');
-            updateUIForUser(null);
-        } catch (error) {
-            console.error('Error signing out:', error);
-        }
+    logoutBtn.addEventListener('click', function() {
+        firebaseAuth.signOut()
+            .then(function() {
+                updateUIForUser(null);
+            })
+            .catch(function(error) {
+                console.error('Error signing out:', error);
+            });
     });
 }
 
-// Update UI based on authentication state
+// Update UI based on auth state
 function updateUIForUser(user) {
     if (user) {
         if (loginBtn) loginBtn.classList.add('hidden');
@@ -135,25 +140,23 @@ function updateUIForUser(user) {
             userEmailDisplay.textContent = user.email;
             userEmailDisplay.classList.remove('hidden');
         }
-        document.querySelectorAll('.vote-btn').forEach(btn => {
+        document.querySelectorAll('.vote-btn').forEach(function(btn) {
             btn.disabled = false;
         });
     } else {
         if (loginBtn) loginBtn.classList.remove('hidden');
         if (logoutBtn) logoutBtn.classList.add('hidden');
         if (userEmailDisplay) userEmailDisplay.classList.add('hidden');
-        document.querySelectorAll('.vote-btn').forEach(btn => {
+        document.querySelectorAll('.vote-btn').forEach(function(btn) {
             btn.disabled = true;
         });
     }
 }
 
-// Listen for authentication state changes
-firebaseAuth.onAuthStateChanged((user) => {
+// Auth state listener
+firebaseAuth.onAuthStateChanged(function(user) {
     console.log('Auth state changed:', user ? user.email : 'no user');
     updateUIForUser(user);
-
-    // If on voting page, initialize user voting
     if (user && typeof initializeVoting === 'function') {
         initializeVoting(user);
     }
