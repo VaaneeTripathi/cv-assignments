@@ -21,6 +21,7 @@ const database = firebase.database();
 
 // Configure auth settings
 auth.useDeviceLanguage();
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(console.error);
 
 // Google Auth Provider
 const googleProvider = new firebase.auth.GoogleAuthProvider();

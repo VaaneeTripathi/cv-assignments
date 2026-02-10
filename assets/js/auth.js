@@ -123,9 +123,10 @@ function updateUIForUser(user) {
 
 // Listen for authentication state changes
 firebaseAuth.onAuthStateChanged((user) => {
+    console.log('Auth state changed:', user ? user.email : 'no user');
     updateUIForUser(user);
 
-    // If on voting page, initialize votes
+    // If on voting page, initialize user voting
     if (user && typeof initializeVoting === 'function') {
         initializeVoting(user);
     }
