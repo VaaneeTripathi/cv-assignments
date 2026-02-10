@@ -83,12 +83,14 @@ function handleGoogleToken(tokenResponse) {
         .then(function(result) {
             if (!isEmailAllowed(result.user.email)) {
                 localStorage.removeItem('signedInEmail');
+                localStorage.removeItem('googleAccessToken');
                 return firebaseAuth.signOut().then(function() {
                     showMessage('This email is not authorized. Please use your university email.', 'error');
                 });
             }
-            // Store email for instant UI on next page load
+            // Store for instant restore on next page load
             localStorage.setItem('signedInEmail', result.user.email);
+            localStorage.setItem('googleAccessToken', tokenResponse.access_token);
             // Success — close modal
             if (loginModal) {
                 loginModal.classList.remove('active');
@@ -125,6 +127,7 @@ function showMessage(text, type) {
 if (logoutBtn) {
     logoutBtn.addEventListener('click', function() {
         localStorage.removeItem('signedInEmail');
+        localStorage.removeItem('googleAccessToken');
         firebaseAuth.signOut()
             .then(function() {
                 updateUIForUser(null);
@@ -161,6 +164,20 @@ function updateUIForUser(user) {
 var cachedEmail = localStorage.getItem('signedInEmail');
 if (cachedEmail) {
     updateUIForUser({ email: cachedEmail });
+}
+
+// Proactive session restore: bypass the slow Firebase auth iframe
+// by signing in directly with stored Google token (~100ms vs ~5min)
+var storedToken = localStorage.getItem('googleAccessToken');
+if (storedToken) {
+    var credential = firebase.auth.GoogleAuthProvider.credential(null, storedToken);
+    firebaseAuth.signInWithCredential(credential).catch(function(err) {
+        // Token expired (~1hr) — clear and let user re-login
+        console.log('Stored token expired:', err.code);
+        localStorage.removeItem('googleAccessToken');
+        localStorage.removeItem('signedInEmail');
+        updateUIForUser(null);
+    });
 }
 
 // Auth state listener — confirms or corrects the optimistic UI
