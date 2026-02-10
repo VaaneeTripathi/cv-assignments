@@ -58,11 +58,6 @@ loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = emailInput.value.trim();
 
-    const actionCodeSettings = {
-        url: window.location.origin + '/cv-assignments/auth-complete.html',
-        handleCodeInApp: true
-};
-
     // Check if email is allowed
     if (!isEmailAllowed(email)) {
         showMessage('This email is not authorized. Please use your university email.', 'error');
@@ -70,8 +65,9 @@ loginForm.addEventListener('submit', async (e) => {
     }
 
     try {
+        // Use actionCodeSettings from firebase-config.js (already exported to window)
         // Send sign-in link to email
-        await firebaseAuth.sendSignInLinkToEmail(email, actionCodeSettings);
+        await firebaseAuth.sendSignInLinkToEmail(email, window.actionCodeSettings);
         
         // Save email for completion of sign-in
         window.localStorage.setItem('emailForSignIn', email);
