@@ -82,10 +82,13 @@ function handleGoogleToken(tokenResponse) {
     firebaseAuth.signInWithCredential(credential)
         .then(function(result) {
             if (!isEmailAllowed(result.user.email)) {
+                localStorage.removeItem('signedInEmail');
                 return firebaseAuth.signOut().then(function() {
                     showMessage('This email is not authorized. Please use your university email.', 'error');
                 });
             }
+            // Store email for instant UI on next page load
+            localStorage.setItem('signedInEmail', result.user.email);
             // Success — close modal
             if (loginModal) {
                 loginModal.classList.remove('active');
@@ -121,6 +124,7 @@ function showMessage(text, type) {
 // Logout
 if (logoutBtn) {
     logoutBtn.addEventListener('click', function() {
+        localStorage.removeItem('signedInEmail');
         firebaseAuth.signOut()
             .then(function() {
                 updateUIForUser(null);
@@ -153,11 +157,21 @@ function updateUIForUser(user) {
     }
 }
 
-// Auth state listener
+// Optimistic UI: show logged-in state instantly from localStorage
+var cachedEmail = localStorage.getItem('signedInEmail');
+if (cachedEmail) {
+    updateUIForUser({ email: cachedEmail });
+}
+
+// Auth state listener — confirms or corrects the optimistic UI
 firebaseAuth.onAuthStateChanged(function(user) {
-    console.log('Auth state changed:', user ? user.email : 'no user');
     updateUIForUser(user);
-    if (user && typeof initializeVoting === 'function') {
-        initializeVoting(user);
+    if (user) {
+        localStorage.setItem('signedInEmail', user.email);
+        if (typeof initializeVoting === 'function') {
+            initializeVoting(user);
+        }
+    } else {
+        localStorage.removeItem('signedInEmail');
     }
 });
