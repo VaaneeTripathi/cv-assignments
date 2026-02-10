@@ -85,7 +85,9 @@ loginForm.addEventListener('submit', async (e) => {
         }, 3000);
     } catch (error) {
         console.error('Error sending login email:', error);
-        showMessage('Error sending login email. Please try again.', 'error');
+        console.error('Error code:', error.code);
+        console.error('Error message:', error.message);
+        showMessage(`Error: ${error.code} — ${error.message}`, 'error');
     }
 });
 
