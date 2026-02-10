@@ -1,0 +1,33 @@
+# Site settings
+title: Computer Vision Assignments
+description: Assignment submissions for Computer Vision class
+author: Vaanee Tripathi 
+email: vaanee.tripathi_ug25@ashoka.edu.in  
+baseurl: "/cv-assignments" # Project repository name
+url: "https://vaaneetripathi.github.io"  # TODO: Replace with your GitHub username
+
+# Build settings
+markdown: kramdown
+theme: minima
+
+# Collections
+collections:
+  assignments:
+    output: true
+    permalink: /assignments/:name/
+
+# Exclude from processing
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "assignments"
+    values:
+      layout: "assignment"
