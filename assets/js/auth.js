@@ -55,26 +55,26 @@ window.addEventListener('click', (e) => {
     }
 });
 
-// Handle Google Sign-In
-if (googleSignInBtn) {
-    googleSignInBtn.addEventListener('click', async () => {
-        try {
-            const result = await firebaseAuth.signInWithPopup(googleProvider);
-            const email = result.user.email;
-
-            if (!isEmailAllowed(email)) {
-                await firebaseAuth.signOut();
-                showMessage('This email is not authorized. Please use your university email.', 'error');
-                return;
+// Handle redirect result on page load (completes sign-in after Google redirect)
+firebaseAuth.getRedirectResult().then((result) => {
+    if (result && result.user) {
+        if (!isEmailAllowed(result.user.email)) {
+            firebaseAuth.signOut();
+            showMessage('This email is not authorized. Please use your university email.', 'error');
+            if (loginModal) {
+                loginModal.classList.add('active');
+                loginModal.classList.remove('hidden');
             }
-
-            // Success — close modal
-            loginModal.classList.remove('active');
-            loginModal.classList.add('hidden');
-        } catch (error) {
-            console.error('Error signing in:', error);
-            showMessage(`Error: ${error.code} — ${error.message}`, 'error');
         }
+    }
+}).catch((error) => {
+    console.error('Error completing sign-in redirect:', error);
+});
+
+// Handle Google Sign-In button — redirect instead of popup
+if (googleSignInBtn) {
+    googleSignInBtn.addEventListener('click', () => {
+        firebaseAuth.signInWithRedirect(googleProvider);
     });
 }
 
